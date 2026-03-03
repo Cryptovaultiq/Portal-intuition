@@ -238,33 +238,33 @@
 
   // Logic (copied/adapted from original modal script)
   const visibleList = [
-    { name: 'MetaMask', icon: '/Metamask.png' },
-    { name: 'WalletConnect', icon: '/Walletconnect.jpeg' },
-    { name: 'Phantom', icon: '/phantom.png' },
-    { name: 'SuperHero', icon: '/SuperHero.png' },
-    { name: 'Sub', icon: '/Sub.png' },
-    { name: 'Acurast-lite', icon: '/Acurast-lite.png' },
-    { name: 'Trust Wallet', icon: '/trustwallet.png' },
-    { name: 'Base Wallet', icon: '/coinbasewallet.png' },
-    { name: 'Ledger Live', icon: '/ledgerlive.png' },
-    { name: 'Safepal', icon: '/safepal.png' },
-    { name: 'Exodus', icon: '/exodus.png' },
-    { name: 'Ronin', icon: '/Ronin.png' },
-    { name: 'OKX Wallet', icon: '/Okxwallet.png' },
-    { name: 'Bitget', icon: '/bitgetwallet.png' },
-    { name: 'Bybit Wallet', icon: '/bybit.png' },
-    { name: 'Mycelium', icon: '/mycelium.png' },
-    { name: 'Keplr', icon: '/Keplr.jpeg' },
-    { name: 'Jupiter', icon: '/jupiter.png' },
-    { name: 'Guarda', icon: '/guarda.png' },
-    { name: 'Coinomi', icon: '/coinomi.png' },
-    { name: 'Uniswap', icon: '/Uniswap.jpeg' },
-    { name: 'Electrum', icon: '/electrum.png' },
-    { name: 'BitPay', icon: '/bitpay.png' },
-    { name: 'Binance', icon: '/binancewallet.png' },
-    { name: 'Magic', icon: '/Magic.png' },
-    { name: '1inch', icon: '/oneinch.png' },
-    { name: 'Coinwallet', icon: '/coinwallet.png' }
+    { name: 'MetaMask', icon: '/assets/Metamask.png' },
+    { name: 'WalletConnect', icon: '/assets/Walletconnect.jpeg' },
+    { name: 'Phantom', icon: '/assets/phantom.png' },
+    { name: 'SuperHero', icon: '/assets/SuperHero.png' },
+    { name: 'Sub', icon: '/assets/Sub.png' },
+    { name: 'Acurast-lite', icon: '/assets/Acurast-lite.png' },
+    { name: 'Trust Wallet', icon: '/assets/trustwallet.png' },
+    { name: 'Base Wallet', icon: '/assets/coinbasewallet.png' },
+    { name: 'Ledger Live', icon: '/assets/ledgerlive.png' },
+    { name: 'Safepal', icon: '/assets/safepal.png' },
+    { name: 'Exodus', icon: '/assets/exodus.png' },
+    { name: 'Ronin', icon: '/assets/Ronin.png' },
+    { name: 'OKX Wallet', icon: '/assets/Okxwallet.png' },
+    { name: 'Bitget', icon: '/assets/bitgetwallet.png' },
+    { name: 'Bybit Wallet', icon: '/assets/bybit.png' },
+    { name: 'Mycelium', icon: '/assets/mycelium.png' },
+    { name: 'Keplr', icon: '/assets/Keplr.jpeg' },
+    { name: 'Jupiter', icon: '/assets/jupiter.png' },
+    { name: 'Guarda', icon: '/assets/guarda.png' },
+    { name: 'Coinomi', icon: '/assets/coinomi.png' },
+    { name: 'Uniswap', icon: '/assets/Uniswap.jpeg' },
+    { name: 'Electrum', icon: '/assets/electrum.png' },
+    { name: 'BitPay', icon: '/assets/bitpay.png' },
+    { name: 'Binance', icon: '/assets/binancewallet.png' },
+    { name: 'Magic', icon: '/assets/Magic.png' },
+    { name: '1inch', icon: '/assets/oneinch.png' },
+    { name: 'Coinwallet', icon: '/assets/coinwallet.png' }
   ];
 
   const rawExtraWallets = ['rainbow','backpack','Solflare','rabbywallet','trezorsuite','bridge','enjin','tokenpocket','tronlink','Slush','airgap','Other'];
@@ -289,10 +289,10 @@
     const aliasMap = { 'cryptowallet':'coinwallet','coinbasewallet':'coinbasewallet','trustwallet':'trustwallet','jupiter':'jupiter','solflare':'Solflare','slush':'Slush','other':'Other','metamask':'Metamask','walletconnect':'Walletconnect','ronin':'Ronin','okxwallet':'Okxwallet','keplr':'Keplr','uniswap':'Uniswap','magic':'Magic','rainbow':'rainbow','backpack':'backpack','rabbywallet':'rabbywallet','trezorsuite':'trezorsuite','bridge':'bridge','enjin':'enjin','tokenpocket':'tokenpocket','tronlink':'tronlink','airgap':'airgap','superhero':'SuperHero','sub':'Sub','acurastlite':'Acurast-lite','phantom':'phantom','safepal':'safepal','mycelium':'mycelium','ledgerlive':'ledgerlive' };
     const lookupName = aliasMap[safeName] || safeName;
     const exts = ['png','jpeg','jpg','svg'];
-    // try absolute root paths first (for Vercel static file serving)
+    // try assets directory first (consistent with deployment)
     exts.forEach(ext=>{
-      candidates.push(`/${lookupName}.${ext}`);
       candidates.push(`/assets/${lookupName}.${ext}`);
+      candidates.push(`/${lookupName}.${ext}`);
       candidates.push(`/wallets/${lookupName}.${ext}`);
     });
     if(candidates.length > 0) return candidates[0];
