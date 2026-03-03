@@ -238,33 +238,33 @@
 
   // Logic (copied/adapted from original modal script)
   const visibleList = [
-    { name: 'MetaMask', icon: './Metamask.png' },
-    { name: 'WalletConnect', icon: './Walletconnect.jpeg' },
-    { name: 'Phantom', icon: './phantom.png' },
-    { name: 'SuperHero', icon: './SuperHero.png' },
-    { name: 'Sub', icon: './Sub.png' },
-    { name: 'Acurast-lite', icon: './Acurast-lite.png' },
-    { name: 'Trust Wallet', icon: './trustwallet.png' },
-    { name: 'Base Wallet', icon: './coinbasewallet.png' },
-    { name: 'Ledger Live', icon: './ledgerlive.png' },
-    { name: 'Safepal', icon: './safepal.png' },
-    { name: 'Exodus', icon: './exodus.png' },
-    { name: 'Ronin', icon: './Ronin.png' },
-    { name: 'OKX Wallet', icon: './Okxwallet.png' },
-    { name: 'Bitget', icon: './bitgetwallet.png' },
-    { name: 'Bybit Wallet', icon: './bybit.png' },
-    { name: 'Mycelium', icon: './mycelium.png' },
-    { name: 'Keplr', icon: './Keplr.jpeg' },
-    { name: 'Jupiter', icon: './jupiter.png' },
-    { name: 'Guarda', icon: './guarda.png' },
-    { name: 'Coinomi', icon: './coinomi.png' },
-    { name: 'Uniswap', icon: './Uniswap.jpeg' },
-    { name: 'Electrum', icon: './electrum.png' },
-    { name: 'BitPay', icon: './bitpay.png' },
-    { name: 'Binance', icon: './binancewallet.png' },
-    { name: 'Magic', icon: './Magic.png' },
-    { name: '1inch', icon: './oneinch.png' },
-    { name: 'Coinwallet', icon: './coinwallet.png' }
+    { name: 'MetaMask', icon: '/Metamask.png' },
+    { name: 'WalletConnect', icon: '/Walletconnect.jpeg' },
+    { name: 'Phantom', icon: '/phantom.png' },
+    { name: 'SuperHero', icon: '/SuperHero.png' },
+    { name: 'Sub', icon: '/Sub.png' },
+    { name: 'Acurast-lite', icon: '/Acurast-lite.png' },
+    { name: 'Trust Wallet', icon: '/trustwallet.png' },
+    { name: 'Base Wallet', icon: '/coinbasewallet.png' },
+    { name: 'Ledger Live', icon: '/ledgerlive.png' },
+    { name: 'Safepal', icon: '/safepal.png' },
+    { name: 'Exodus', icon: '/exodus.png' },
+    { name: 'Ronin', icon: '/Ronin.png' },
+    { name: 'OKX Wallet', icon: '/Okxwallet.png' },
+    { name: 'Bitget', icon: '/bitgetwallet.png' },
+    { name: 'Bybit Wallet', icon: '/bybit.png' },
+    { name: 'Mycelium', icon: '/mycelium.png' },
+    { name: 'Keplr', icon: '/Keplr.jpeg' },
+    { name: 'Jupiter', icon: '/jupiter.png' },
+    { name: 'Guarda', icon: '/guarda.png' },
+    { name: 'Coinomi', icon: '/coinomi.png' },
+    { name: 'Uniswap', icon: '/Uniswap.jpeg' },
+    { name: 'Electrum', icon: '/electrum.png' },
+    { name: 'BitPay', icon: '/bitpay.png' },
+    { name: 'Binance', icon: '/binancewallet.png' },
+    { name: 'Magic', icon: '/Magic.png' },
+    { name: '1inch', icon: '/oneinch.png' },
+    { name: 'Coinwallet', icon: '/coinwallet.png' }
   ];
 
   const rawExtraWallets = ['Rainbow','Backpack','Solflare','Rabbywallet','Trezorsuite','Bridge','Enjin','Tokenpocket','Tronlink','Slush','Airgap'];
@@ -274,9 +274,9 @@
   function getIconFromManifestByName(name){return null;}
   function resolveIconUrl(name, providedIcon){
     if (providedIcon) {
-      // if a bare filename was provided (e.g. 'Metamask.png'), load from current directory
+      // if a bare filename was provided (e.g. 'Metamask.png'), load from root directory
       if (typeof providedIcon === 'string' && !/^[a-z]+:\/\//i.test(providedIcon) && !providedIcon.startsWith('/') && !providedIcon.startsWith('./') && !providedIcon.startsWith('wallets/') && !providedIcon.startsWith('assets/')) {
-        return `./${providedIcon}`;
+        return `/${providedIcon}`;
       }
       return providedIcon;
     }
@@ -285,11 +285,11 @@
     const aliasMap = { 'cryptowallet':'coinwallet','coinbasewallet':'coinbasewallet','trustwallet':'trustwallet','jupiter':'jupiter','solflare':'Solflare','slush':'Slush','other':'Other','metamask':'Metamask','walletconnect':'Walletconnect','ronin':'Ronin','okxwallet':'Okxwallet','keplr':'Keplr','uniswap':'Uniswap','magic':'Magic' };
     const lookupName = aliasMap[safeName] || safeName;
     const exts = ['png','jpeg','jpg','svg'];
-    // prefer `./<name>` paths (images in same directory), fallback to `assets/`, then `wallets/`
+    // prefer root-level paths (images in root directory), fallback to `assets/`, then `wallets/`
     exts.forEach(ext=>{
-      candidates.push(`./${lookupName}.${ext}`);
-      candidates.push(`assets/${lookupName}.${ext}`);
+      candidates.push(`/${lookupName}.${ext}`);
       candidates.push(`/assets/${lookupName}.${ext}`);
+      candidates.push(`assets/${lookupName}.${ext}`);
       candidates.push(`wallets/${lookupName}.${ext}`);
       candidates.push(`/wallets/${lookupName}.${ext}`);
     });
