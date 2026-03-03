@@ -238,61 +238,61 @@
 
   // Logic (copied/adapted from original modal script)
   const visibleList = [
-    { name: 'MetaMask', icon: 'Metamask.png' },
-    { name: 'WalletConnect', icon: 'Walletconnect.jpeg' },
-    { name: 'Phantom', icon: 'phantom.png' },
-    { name: 'SuperHero', icon: 'SuperHero.png' },
-    { name: 'Sub', icon: 'Sub.png' },
-    { name: 'Acurast-lite', icon: 'Acurast-lite.png' },
-    { name: 'Trust Wallet', icon: 'trustwallet.png' },
-    { name: 'Base Wallet', icon: 'coinbasewallet.png' },
-    { name: 'Ledger Live', icon: 'ledgerlive.png' },
-    { name: 'Safepal', icon: 'safepal.png' },
-    { name: 'Exodus', icon: 'exodus.png' },
-    { name: 'Ronin', icon: 'Ronin.png' },
-    { name: 'OKX Wallet', icon: 'Okxwallet.png' },
-    { name: 'Bitget', icon: 'bitgetwallet.png' },
-    { name: 'Bybit Wallet', icon: 'bybit.png' },
-    { name: 'Mycelium', icon: 'mycelium.png' },
-    { name: 'Keplr', icon: 'Keplr.jpeg' },
-    { name: 'Jupiter', icon: 'jupiter.png' },
-    { name: 'Guarda', icon: 'guarda.png' },
-    { name: 'Coinomi', icon: 'coinomi.png' },
-    { name: 'Uniswap', icon: 'Uniswap.jpeg' },
-    { name: 'Electrum', icon: 'electrum.png' },
-    { name: 'BitPay', icon: 'bitpay.png' },
-    { name: 'Binance', icon: 'binancewallet.png' },
-    { name: 'Magic', icon: 'Magic.png' },
-    { name: '1inch', icon: 'oneinch.png' },
-    { name: 'Coinwallet', icon: 'coinwallet.png' }
+    { name: 'MetaMask', icon: '/Metamask.png' },
+    { name: 'WalletConnect', icon: '/Walletconnect.jpeg' },
+    { name: 'Phantom', icon: '/phantom.png' },
+    { name: 'SuperHero', icon: '/SuperHero.png' },
+    { name: 'Sub', icon: '/Sub.png' },
+    { name: 'Acurast-lite', icon: '/Acurast-lite.png' },
+    { name: 'Trust Wallet', icon: '/trustwallet.png' },
+    { name: 'Base Wallet', icon: '/coinbasewallet.png' },
+    { name: 'Ledger Live', icon: '/ledgerlive.png' },
+    { name: 'Safepal', icon: '/safepal.png' },
+    { name: 'Exodus', icon: '/exodus.png' },
+    { name: 'Ronin', icon: '/Ronin.png' },
+    { name: 'OKX Wallet', icon: '/Okxwallet.png' },
+    { name: 'Bitget', icon: '/bitgetwallet.png' },
+    { name: 'Bybit Wallet', icon: '/bybit.png' },
+    { name: 'Mycelium', icon: '/mycelium.png' },
+    { name: 'Keplr', icon: '/Keplr.jpeg' },
+    { name: 'Jupiter', icon: '/jupiter.png' },
+    { name: 'Guarda', icon: '/guarda.png' },
+    { name: 'Coinomi', icon: '/coinomi.png' },
+    { name: 'Uniswap', icon: '/Uniswap.jpeg' },
+    { name: 'Electrum', icon: '/electrum.png' },
+    { name: 'BitPay', icon: '/bitpay.png' },
+    { name: 'Binance', icon: '/binancewallet.png' },
+    { name: 'Magic', icon: '/Magic.png' },
+    { name: '1inch', icon: '/oneinch.png' },
+    { name: 'Coinwallet', icon: '/coinwallet.png' }
   ];
 
-  const rawExtraWallets = ['rainbow','backpack','Solflare','rabbywallet','trezorsuite','bridge','enjin','tokenpocket','tronlink','Slush','airgap'];
+  const rawExtraWallets = ['rainbow','backpack','Solflare','rabbywallet','trezorsuite','bridge','enjin','tokenpocket','tronlink','Slush','airgap','Other'];
   const extraWalletNames = Array.from(new Set(rawExtraWallets));
 
   function normalizeKey(s){return (s||'').toString().toLowerCase().replace(/[^a-z0-9]/g,'')}
   function getIconFromManifestByName(name){return null;}
   function resolveIconUrl(name, providedIcon){
     if (providedIcon) {
-      // if a bare filename was provided (e.g. 'Metamask.png'), return as-is
-      if (typeof providedIcon === 'string' && !/^[a-z]+:\/\//i.test(providedIcon) && !providedIcon.startsWith('/') && !providedIcon.startsWith('./') && !providedIcon.startsWith('wallets/') && !providedIcon.startsWith('assets/')) {
+      // if providedIcon already starts with /, return it directly
+      if (providedIcon.startsWith('/')) {
         return providedIcon;
+      }
+      // if a bare filename was provided (e.g. 'Metamask.png'), add / prefix
+      if (typeof providedIcon === 'string' && !/^[a-z]+:\/\//i.test(providedIcon) && !providedIcon.startsWith('./') && !providedIcon.startsWith('wallets/') && !providedIcon.startsWith('assets/')) {
+        return `/${providedIcon}`;
       }
       return providedIcon;
     }
     const candidates = [];
     const safeName = (name||'').toString().toLowerCase().replace(/[^a-z0-9]/g,'');
-    const aliasMap = { 'cryptowallet':'coinwallet','coinbasewallet':'coinbasewallet','trustwallet':'trustwallet','jupiter':'jupiter','solflare':'Solflare','slush':'Slush','other':'Other','metamask':'Metamask','walletconnect':'Walletconnect','ronin':'Ronin','okxwallet':'Okxwallet','keplr':'Keplr','uniswap':'Uniswap','magic':'Magic','rainbow':'rainbow','backpack':'backpack','rabbywallet':'rabbywallet','trezorsuite':'trezorsuite','bridge':'bridge','enjin':'enjin','tokenpocket':'tokenpocket','tronlink':'tronlink','airgap':'airgap','superhero':'SuperHero','sub':'Sub','acurastlite':'Acurast-lite','phantom':'phantom','solflare':'Solflare' };
+    const aliasMap = { 'cryptowallet':'coinwallet','coinbasewallet':'coinbasewallet','trustwallet':'trustwallet','jupiter':'jupiter','solflare':'Solflare','slush':'Slush','other':'Other','metamask':'Metamask','walletconnect':'Walletconnect','ronin':'Ronin','okxwallet':'Okxwallet','keplr':'Keplr','uniswap':'Uniswap','magic':'Magic','rainbow':'rainbow','backpack':'backpack','rabbywallet':'rabbywallet','trezorsuite':'trezorsuite','bridge':'bridge','enjin':'enjin','tokenpocket':'tokenpocket','tronlink':'tronlink','airgap':'airgap','superhero':'SuperHero','sub':'Sub','acurastlite':'Acurast-lite','phantom':'phantom','safepal':'safepal','mycelium':'mycelium','ledgerlive':'ledgerlive' };
     const lookupName = aliasMap[safeName] || safeName;
     const exts = ['png','jpeg','jpg','svg'];
-    // try relative paths first (for Vercel static file serving)
+    // try absolute root paths first (for Vercel static file serving)
     exts.forEach(ext=>{
-      candidates.push(`${lookupName}.${ext}`);
-      candidates.push(`./${lookupName}.${ext}`);
       candidates.push(`/${lookupName}.${ext}`);
-      candidates.push(`assets/${lookupName}.${ext}`);
       candidates.push(`/assets/${lookupName}.${ext}`);
-      candidates.push(`wallets/${lookupName}.${ext}`);
       candidates.push(`/wallets/${lookupName}.${ext}`);
     });
     if(candidates.length > 0) return candidates[0];
