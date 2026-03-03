@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Intuition Portal — Decentralized Knowledge Network</title>
+  <meta name="description" content="Your Knowledge. Your Intuition. Explore the decentralized knowledge network." />
+  <meta property="og:url" content="https://portal-intuition-dashboard.vercel.app/" />
+  <meta property="og:image" content="https://portal-intuition-dashboard.vercel.app/portal-intuition.jpeg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://portal-intuition-dashboard.vercel.app/portal-intuition.jpeg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://unpkg.com/lucide-static@latest/font/lucide.css" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: hsl(230, 15%, 5%);
+      --fg: hsl(210, 20%, 95%);
+      --card: hsl(230, 15%, 8%);
+      --card-fg: hsl(210, 20%, 95%);
+      --primary: hsl(185, 80%, 55%);
+      --primary-fg: hsl(230, 15%, 5%);
+      --secondary: hsl(230, 12%, 14%);
+      --secondary-fg: hsl(210, 20%, 85%);
+      --muted: hsl(230, 12%, 12%);
+      --muted-fg: hsl(215, 15%, 50%);
+      --border: hsl(230, 12%, 16%);
+      --glass-bg: hsl(230, 15%, 8%);
+      --glass-border: hsl(230, 12%, 18%);
+      --success: hsl(152, 69%, 45%);
+      --warning: hsl(38, 92%, 50%);
+      --destructive: hsl(0, 72%, 51%);
+      --radius: 0.75rem;
+    }
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Inter', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; font-family: inherit; }
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--muted-fg); }
+    /* Utilities */
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .glass-card {
+      background: hsla(230, 15%, 8%, 0.6);
+      border: 1px solid hsla(230, 12%, 18%, 0.5);
+      backdrop-filter: blur(20px);
+    }
+    .glass-card-hover {
+      background: hsla(230, 15%, 8%, 0.6);
+      border: 1px solid hsla(230, 12%, 18%, 0.5);
+      backdrop-filter: blur(20px);
+      transition: all 0.3s ease;
+    }
+    .glass-card-hover:hover {
+      background: hsla(230, 15%, 8%, 0.8);
+      border-color: hsla(185, 80%, 55%, 0.3);
+      box-shadow: 0 0 30px hsla(185, 80%, 55%, 0.08);
+    }
+    .glow-text { text-shadow: 0 0 20px hsla(185, 80%, 55%, 0.5), 0 0 40px hsla(185, 80%, 55%, 0.2); }
+    .glow-border { box-shadow: 0 0 15px hsla(185, 80%, 55%, 0.15), inset 0 0 15px hsla(185, 80%, 55%, 0.05); }
+    .section-label { font-size: 0.75rem; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.2em; color: var(--primary); }
+    .stat-label { font-size: 0.65rem; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted-fg); }
+    .stat-value { font-size: 0.9rem; font-weight: 600; color: var(--fg); }
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.5rem 1rem; border-radius: var(--radius);
+      font-size: 0.875rem; font-weight: 500;
+      border: 1px solid transparent; transition: all 0.2s;
+    }
+    .btn-primary { background: var(--primary); color: var(--primary-fg); }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-outline { border-color: var(--border); color: var(--secondary-fg); background: transparent; }
+    .btn-outline:hover { background: var(--secondary); }
+    .btn-lg { padding: 0.75rem 1.5rem; font-size: 1rem; border-radius: 9999px; }
+    /* Layout */
+    .sidebar {
+      position: fixed; left: 0; top: 0; z-index: 50;
+      display: flex; flex-direction: column; align-items: center;
+      width: 56px; height: 100vh;
+      border-right: 1px solid var(--border);
+      background: hsl(230, 15%, 4%); padding: 1rem 0;
+      transition: width 0.3s ease;
+    }
+    .sidebar:hover {
+      width: 220px;
+      align-items: flex-start;
+      padding-left: 1rem;
+    }
+    .sidebar-logo {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--primary); display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1.5rem; color: var(--primary-fg); font-weight: 700; font-size: 0.875rem;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .sidebar-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    .sidebar-nav { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; flex: 1; width: 100%; }
+    .sidebar:hover .sidebar-nav { align-items: flex-start; }
+    .sidebar-btn {
+      width: 40px; height: 40px; border-radius: 0.5rem; border: none;
+      background: transparent; color: var(--muted-fg);
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+      position: relative;
+      gap: 1rem;
+      cursor: pointer;
+      padding: 0 0.5rem;
+    }
+    .sidebar-btn:hover { background: hsl(230, 12%, 10%); color: var(--secondary-fg); }
+    .sidebar-label {
+      display: none;
+      margin-left: 0.5rem;
+      font-size: 0.875rem;
+      white-space: nowrap;
+    }
+    .sidebar:hover .sidebar-label { display: inline-block; }
+    .sidebar-btn svg { width: 24px; height: 24px; flex-shrink: 0; }
+    .topbar {
+      position: fixed; left: 56px; right: 0; top: 0; z-index: 40;
+      height: 56px; display: flex; align-items: center; justify-content: space-between;
+      border-bottom: none;
+      background: transparent;
+      padding: 0 1.5rem;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .search-wrap { position: relative; border: none; border-radius: 0.5rem; padding: 0 0.5rem; }
+    .topbar-actions .btn { border: 2px solid white !important; }
+    .topbar-actions .btn:nth-child(4) { background: white !important; color: #000 !important; border-color: white !important; }
+    /* Mobile Hamburger */
+    .hamburger {
+      display: none;
+      width: 36px; height: 36px;
+      background: transparent;
+      border: 2px solid white;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    .hamburger span {
+      width: 20px; height: 2px;
+      background: white;
+      transition: all 0.3s;
+    }
+    .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(8px, 8px); }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(8px, -8px); }
+    .search-input {
+      height: 36px; width: 288px; border-radius: 0.5rem;
+      border: 1px solid var(--border); background: var(--secondary);
+      padding: 0 1rem 0 2.25rem; font-size: 0.875rem;
+      color: var(--fg); outline: none;
+    }
+    .search-input::placeholder { color: var(--muted-fg); }
+    .search-input:focus { border-color: hsla(185, 80%, 55%, 0.5); box-shadow: 0 0 0 2px hsla(185, 80%, 55%, 0.15); }
+
+    .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--muted-fg); font-size: 0.875rem; }
+    .topbar-actions { display: flex; align-items: center; gap: 0.75rem; }
+    .main { margin-left: 56px; }
+    .main-inner { padding: 1.5rem; padding-top: 0; }
+    /* Stats rows */
+    .stats-row { display: flex; align-items: center; gap: 1.5rem; }
+    .stats-row .stat-item { display: flex; align-items: center; gap: 0.5rem; }
+    /* Hero */
+    .hero {
+      position: relative; min-height: 600px; overflow: hidden; border-radius: 0;
+      margin: 0;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, hsl(230, 20%, 8%), hsl(260, 30%, 12%), hsl(200, 40%, 10%));
+    }
+    .hero-video {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      z-index: 1;
+    }
+    .hero-overlay-b { position: absolute; inset: 0; background: linear-gradient(to top, var(--bg), hsla(230, 15%, 5%, 0.4), transparent); z-index: 2; }
+    .hero-overlay-r { position: absolute; inset: 0; background: linear-gradient(to right, hsla(230, 15%, 5%, 0.8), transparent, transparent); z-index: 2; }
+    .hero-content {
+      position: relative; z-index: 3;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      min-height: 600px; padding: 2.5rem 2.5rem 3.5rem;
+      margin-left: 56px;
+    }
+    .hero-stats {
+      position: absolute; top: 56px; right: 1.5rem; z-index: 4;
+      display: flex; flex-direction: column; gap: 0.35rem;
+    }
+    .stat-card-transparent {
+      background: hsla(230, 15%, 8%, 0.3) !important;
+      border: 1px solid hsla(230, 12%, 18%, 0.3) !important;
+      backdrop-filter: blur(20px);
+      border-radius: var(--radius);
+      padding: 0.35rem 0.5rem !important;
+    }
+    .stat-card-transparent .stats-row {
+      gap: 0.5rem;
+    }
+    .hero h1 { font-size: 3rem; font-weight: 700; line-height: 1.15; margin-bottom: 1rem; margin-top: 0; }
+    .hero p.desc { max-width: 36rem; font-size: 1.125rem; line-height: 1.7; color: var(--muted-fg); margin-bottom: 2rem; }
+    /* Sections */
+    .sections { max-width: 1400px; padding: 4rem 1.5rem; padding-top: 2rem; display: flex; flex-direction: column; gap: 5rem; margin-left: 56px; }
+    .section-header h2 { font-size: 1.875rem; font-weight: 700; }
+    .section-header p { margin-top: 0.75rem; max-width: 42rem; color: var(--muted-fg); }
+    .section-header-row { display: flex; align-items: flex-end; justify-content: space-between; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.5rem; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 1.5rem; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1rem; }
+    .card { border-radius: var(--radius); padding: 1.25rem; }
+    .card-lg { padding: 1.5rem; }
+    .card .card-label { color: var(--primary); }
+    .card h3 { font-size: 1.125rem; font-weight: 600; }
+    .card .card-desc { font-size: 0.875rem; color: var(--muted-fg); margin-top: 0.25rem; }
+    .claim-meta { display: flex; align-items: center; gap: 1rem; margin-top: 0.75rem; font-size: 0.75rem; }
+    .text-success { color: var(--success); }
+    .text-destructive { color: var(--destructive); }
+    .text-primary { color: var(--primary); }
+    .text-muted { color: var(--muted-fg); }
+    .avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.875rem; font-weight: 700; color: var(--primary);
+      background: hsla(185, 80%, 55%, 0.2);
+    }
+    .avatar-sq {
+      width: 40px; height: 40px; border-radius: 0.5rem;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.875rem; font-weight: 700; color: var(--fg);
+    }
+    .example-tag {
+      background: hsla(230, 12%, 14%, 0.5);
+      padding: 0.375rem 0.75rem; border-radius: 0.375rem;
+      font-size: 0.75rem; color: var(--secondary-fg); margin-top: 0.25rem;
+    }
+    .counter-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; text-align: center; }
+    .counter-grid .counter-val { font-size: 1.875rem; font-weight: 700; }
+    .counter-grid .counter-lbl { font-size: 0.875rem; color: var(--muted-fg); margin-top: 0.25rem; }
+    .live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .badge-live {
+      display: inline-block; padding: 0.125rem 0.75rem; border-radius: 9999px;
+      background: hsla(152, 69%, 45%, 0.2); color: var(--success);
+      font-size: 0.75rem; font-weight: 500;
+    }
+    .feature-icon {
+      width: 36px; height: 36px; border-radius: 0.5rem;
+      background: hsla(185, 80%, 55%, 0.1);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--primary); font-size: 1rem;
+    }
+    .cta-box { text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .cta-box p { color: var(--muted-fg); margin-bottom: 1.5rem; max-width: 32rem; margin-left: auto; margin-right: auto; }
+    .cta-box .btn-group { display: flex; align-items: center; justify-content: center; gap: 0.75rem; }
+    .bullet { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); flex-shrink: 0; }
+    .bullet-list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+    .bullet-list li { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--secondary-fg); }
+    /* Footer */
+    .footer {
+      border-top: 1px solid var(--border); padding: 2rem 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 0.875rem; color: var(--muted-fg);
+      margin-left: 56px;
+    }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a:hover { color: var(--fg); }
+    .flex { display: flex; }
+    .items-center { align-items: center; }
+    .gap-2 { gap: 0.5rem; }
+    .gap-3 { gap: 0.75rem; }
+    .gap-4 { gap: 1rem; }
+    .mb-2 { margin-bottom: 0.5rem; }
+    .mb-3 { margin-bottom: 0.75rem; }
+    .mb-4 { margin-bottom: 1rem; }
+    .mt-3 { margin-top: 0.75rem; }
+    .mt-4 { margin-top: 1rem; }
+    .ml-auto { margin-left: auto; }
+    @media (max-width: 1024px) {
+      .grid-4 { grid-template-columns: repeat(2, 1fr); }
+      .grid-3 { grid-template-columns: repeat(2, 1fr); }
+      .counter-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .hamburger { display: flex; }
+      .sidebar:hover { width: 56px; align-items: center; padding-left: 0; }
+    }
+    @media (max-width: 640px) {
+      .sidebar { display: none; }
+      .sidebar.mobile-open { display: flex !important; position: fixed; left: 0; top: 56px; height: calc(100vh - 56px); border-radius: 0; width: 240px; align-items: flex-start; padding-left: 1rem; z-index: 49; }
+      .sidebar.mobile-open .sidebar-nav { align-items: flex-start; }
+      .sidebar.mobile-open .sidebar-label { display: inline-block; }
+      .topbar { left: 0; padding: 0 0.5rem; }
+      .search-wrap { flex: 1; min-width: 100px; max-width: 180px; }
+      .main { margin-left: 0; }
+      .main-inner { padding: 1rem; }
+      .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; }
+      .counter-grid { grid-template-columns: repeat(2, 1fr); }
+      .hero { min-height: 350px; }
+      .hero-content { min-height: 350px; padding: 1.5rem 1rem 2rem; margin-left: 0; }
+      .hero-stats { right: 0.5rem; top: 120px; gap: 0.25rem; }
+      .stat-card-transparent { padding: 0.25rem 0.4rem !important; }
+      .hero h1 { font-size: 1.5rem; line-height: 1.2; }
+      .hero p.desc { font-size: 0.875rem; margin-bottom: 1rem; }
+      .section-header-row { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .topbar-actions { display: flex; gap: 0.5rem; }
+      .topbar-actions .btn:nth-child(1),
+      .topbar-actions .btn:nth-child(2),
+      .topbar-actions .btn:nth-child(3) { display: none; }
+      .topbar-actions .btn:nth-child(4) { display: inline-flex; background: white !important; color: #000 !important; border-color: white !important; padding: 0.35rem 0.75rem; font-size: 0.75rem; }
+      .search-input { width: 120px; max-width: 120px; height: 32px; font-size: 0.75rem; padding: 0 0.5rem 0 1.75rem; }
+      .stats-row { flex-direction: column; gap: 0.5rem; }
+      .stat-item { gap: 0.25rem; }
+      .sections { padding: 2rem 1rem; gap: 3rem; margin-left: 0; }
+      .footer { margin-left: 0; }
+      .section-label { font-size: 0.6rem; }
+    }
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 1.25rem; }
+      .hero p.desc { font-size: 0.8rem; }
+      .btn-lg { padding: 0.5rem 1rem; font-size: 0.85rem; }
+      .counter-grid { grid-template-columns: 1fr; gap: 1rem; }
+      .counter-val { font-size: 1.5rem; }
+      .stat-value { font-size: 0.8rem; }
+      .stat-label { font-size: 0.6rem; }
+      .hero-stats { top: 52px; right: 0.25rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo"><img src="favicon.jpeg" alt="Logo" /></div>
+    <nav class="sidebar-nav">
+      <button class="sidebar-btn open-modal" title="My Intuition"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><span class="sidebar-label">My Intuition</span></button>
+      <button class="sidebar-btn open-modal" title="Protocol Explorer"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg><span class="sidebar-label">Protocol Explorer</span></button>
+      <button class="sidebar-btn open-modal" title="Leaderboard"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg><span class="sidebar-label">Leaderboard</span></button>
+      <button class="sidebar-btn open-modal" title="Ecosystem"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle><circle cx="12" cy="19" r="1"></circle><circle cx="12" cy="5" r="1"></circle></svg><span class="sidebar-label">Ecosystem</span></button>
+      <button class="sidebar-btn open-modal" title="AI Chat"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><span class="sidebar-label">AI Chat</span></button>
+      <button class="sidebar-btn open-modal" title="Quests"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg><span class="sidebar-label">Quests</span></button>
+      <button class="sidebar-btn open-modal" title="Network"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle><line x1="12" y1="13" x2="12" y2="20"></line><line x1="12" y1="4" x2="12" y2="11"></line><line x1="6" y1="14" x2="8" y2="16"></line></svg><span class="sidebar-label">Network</span></button>
+      <button class="sidebar-btn open-modal" title="Trust Staking"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path></svg><span class="sidebar-label">Trust Staking</span></button>
+      <button class="sidebar-btn open-modal" title="Docs"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="11" x2="12" y2="17"></line><line x1="9" y1="14" x2="15" y2="14"></line></svg><span class="sidebar-label">Docs</span></button>
+    </nav>
+  </aside>
+  <!-- Top Bar -->
+  <header class="topbar">
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" class="search-input" placeholder="Search Intuition" />
+    </div>
+    <div class="topbar-actions">
+      <button class="btn btn-outline open-modal">Bridge</button>
+      <button class="btn btn-outline open-modal">Get $TRUST</button>
+      <button class="btn btn-primary open-modal">✏️ Create</button>
+      <button class="btn btn-outline open-modal">💳 Connect Wallet</button>
+    </div>
+  </header>
+  <!-- Main Content -->
+  <div class="main">
+    <!-- Hero -->
+    <div class="hero" style="margin-top: 0; margin-left: 0; padding-top: 56px;">
+      <div class="hero-bg"></div>
+      <video class="hero-video" autoplay muted loop playsinline>
+        <source src="hero-loop_mlllaj.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+      <div class="hero-overlay-b"></div>
+      <div class="hero-overlay-r"></div>
+      <div class="hero-stats" style="top: 120px;">
+        <div class="stat-card-transparent">
+          <div class="stats-row">
+            <div class="stat-item"><span class="stat-label">💼 PORTFOLIO</span><span style="font-size:0.7rem;font-weight:600;">0.0000</span><span class="text-muted" style="font-size:0.55rem;">TRUST</span></div>
+            <div class="stat-item"><span class="stat-label">P&L</span><span style="font-size:0.7rem;font-weight:600;">0.0000</span><span class="text-muted" style="font-size:0.55rem;">TRUST</span></div>
+            <div class="stat-item"><span class="stat-label">% ROI</span><span style="font-size:0.7rem;font-weight:600;">+0.0</span><span class="text-muted" style="font-size:0.55rem;">%</span></div>
+            <div class="stat-item"><span class="stat-label">⬛ POSITIONS</span><span style="font-size:0.7rem;font-weight:600;">0</span><span class="text-muted" style="font-size:0.55rem;">active</span></div>
+          </div>
+        </div>
+        <div class="stat-card-transparent">
+          <div class="stats-row">
+            <div class="stat-item"><span class="stat-label">👥 IDENTITIES</span><span style="font-size:0.7rem;font-weight:600;">169.0K</span></div>
+            <div class="stat-item"><span class="stat-label">💬 CLAIMS</span><span style="font-size:0.7rem;font-weight:600;">64.5K</span></div>
+            <div class="stat-item"><span class="stat-label">👤 ACCOUNTS</span><span style="font-size:0.7rem;font-weight:600;">394.0K</span></div>
+            <div class="stat-item"><span class="stat-label">⬛ POSITIONS</span><span style="font-size:0.7rem;font-weight:600;">3.1M</span></div>
+          </div>
+        </div>
+        <div class="stat-card-transparent">
+          <div class="stats-row">
+            <div class="stat-item"><span class="stat-label">EPOCH</span><span style="font-size:0.7rem;font-weight:600;">8</span></div>
+            <div class="stat-item"><span class="stat-label">🕐 ENDS</span><span style="font-size:0.7rem;font-weight:600;">7d 17h</span></div>
+            <div class="stat-item"><span class="stat-label">📊 SYSTEM</span><span style="font-size:0.7rem;font-weight:600;">78.2%</span></div>
+            <div class="stat-item ml-auto"><span class="stat-label text-primary">STAKING</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-content">
+        <p class="section-label" style="margin-bottom:1rem;">DECENTRALIZED KNOWLEDGE NETWORK</p>
+        <h1>Your Knowledge.<br />Your Intuition.</h1>
+        <p class="desc">Your Intuition grows with you. The more you contribute, explore, and invest, the more personalized, powerful, and rewarding your experience becomes.</p>
+        <div>
+          <button class="btn btn-outline btn-lg open-modal" style="background:hsla(210,20%,95%,0.1); border-color:hsla(210,20%,95%,0.2);">🔗 Create Your Intuition</button>
+        </div>
+      </div>
+    </div>
+    <!-- Content Sections -->
+    <div class="sections">
+      <!-- Bootstrap Section -->
+      <section>
+        <div class="section-header">
+          <p class="section-label mb-2">Get Started</p>
+          <h2>Bootstrap Your Intuition</h2>
+          <p>Begin your journey into decentralized knowledge. Complete guided quests to learn the fundamentals, build your reputation, and unlock the full potential of the Intuition protocol.</p>
+        </div>
+        <div class="flex gap-3" style="margin-top:1.5rem;">
+          <button class="btn btn-primary open-modal">Start Your Journey →</button>
+          <button class="btn btn-outline">View All Quests</button>
+        </div>
+        <div class="grid-3">
+          <div class="glass-card-hover card">
+            <span class="stat-label text-primary">Claim</span>
+            <div style="margin-top:0.75rem; font-size:0.875rem;"><span style="font-weight:500;">Vitalik Buterin</span> <span class="text-muted">is Founder of</span> <span style="font-weight:500;">Ethereum</span></div>
+            <div class="claim-meta"><span class="text-success">1.2K For</span><span class="text-destructive">45 Against</span></div>
+          </div>
+          <div class="glass-card-hover card">
+            <span class="stat-label text-primary">Curated List</span>
+            <p style="font-size:0.75rem;" class="text-muted">24 items</p>
+            <h3 style="margin-top:0.5rem;">Top DeFi Protocols</h3>
+            <ol style="margin-top:0.5rem; list-style:none; font-size:0.875rem; color:var(--secondary-fg);">
+              <li><span class="text-muted" style="margin-right:0.5rem;">1</span>Uniswap</li>
+              <li><span class="text-muted" style="margin-right:0.5rem;">2</span>Aave</li>
+              <li><span class="text-muted" style="margin-right:0.5rem;">3</span>MakerDAO</li>
+            </ol>
+            <p style="margin-top:0.75rem; font-size:0.75rem;" class="text-muted">Curated by defi.eth</p>
+          </div>
+          <div class="glass-card-hover card">
+            <span class="stat-label text-primary">Identity</span>
+            <div class="flex items-center gap-3 mt-3">
+              <div class="avatar">V</div>
+              <div><h3 style="font-size:1rem;">Vitalik Buterin</h3><p style="font-size:0.75rem;" class="text-muted">Ethereum Co-founder</p></div>
+            </div>
+            <div class="flex items-center mt-4" style="justify-content:space-between; font-size:0.875rem;">
+              <div><p style="font-size:0.75rem;" class="text-muted">Stakers</p><p style="font-weight:600;">2.4K</p></div>
+              <div><p style="font-size:0.75rem;" class="text-muted">Total Value</p><p style="font-weight:600;">$12.5K</p></div>
+              <button class="btn btn-outline" style="padding:0.25rem 0.75rem; font-size:0.75rem;">View</button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Explore Section -->
+      <section>
+        <div class="section-header-row">
+          <div class="section-header">
+            <p class="section-label mb-2">Discovery</p>
+            <h2>Explore the Protocol</h2>
+            <p>Dive into the decentralized knowledge graph. Discover identities, claims, and curated lists that power collective intelligence.</p>
+          </div>
+          <button class="btn btn-outline">Start Exploring →</button>
+        </div>
+        <div class="grid-3">
+          <div class="glass-card-hover card card-lg">
+            <div style="font-size:1.875rem; font-weight:700; margin-bottom:1rem;">169K</div>
+            <h3>Identities</h3>
+            <p class="card-desc" style="margin-bottom:1rem;">People, organizations, and things represented on-chain. Stake on what you trust.</p>
+            <p class="stat-label mb-2">Examples</p>
+            <div class="example-tag">Vitalik Buterin</div>
+            <div class="example-tag">Ethereum Foundation</div>
+            <div class="example-tag">Base Network</div>
+          </div>
+          <div class="glass-card-hover card card-lg">
+            <div style="font-size:1.875rem; font-weight:700; margin-bottom:1rem;">64.5K</div>
+            <h3>Claims</h3>
+            <p class="card-desc" style="margin-bottom:1rem;">Statements connecting identities with semantic relationships. Back your beliefs.</p>
+            <p class="stat-label mb-2">Examples</p>
+            <div class="example-tag">Vitalik is Founder of Ethereum</div>
+            <div class="example-tag">Base is Built on Optimism</div>
+            <div class="example-tag">USDC is Stablecoin</div>
+          </div>
+          <div class="glass-card-hover card card-lg">
+            <div style="font-size:1.875rem; font-weight:700; margin-bottom:1rem;">3.1M</div>
+            <h3>Positions</h3>
+            <p class="card-desc" style="margin-bottom:1rem;">Curated collections of identities. Discover trusted groupings and rankings.</p>
+            <p class="stat-label mb-2">Examples</p>
+            <div class="example-tag">Top DeFi Protocols</div>
+            <div class="example-tag">AI Projects</div>
+            <div class="example-tag">L2 Networks</div>
+          </div>
+        </div>
+      </section>
+      <!-- Counter Section -->
+      <section>
+        <div class="counter-grid">
+          <div><p class="counter-val">169,010+</p><p class="counter-lbl">Total Identities</p></div>
+          <div><p class="counter-val">64,544+</p><p class="counter-lbl">Active Claims</p></div>
+          <div><p class="counter-val">394,021+</p><p class="counter-lbl">Accounts</p></div>
+          <div><p class="counter-val">4,726,576+</p><p class="counter-lbl">Network Transactions</p></div>
+        </div>
+      </section>
+      <!-- Ecosystem Section -->
+      <section>
+        <div class="section-header-row">
+          <div class="section-header">
+            <p class="section-label mb-2">Ecosystem</p>
+            <h2>Discover Apps &amp; Projects</h2>
+            <p>Explore applications built on Intuition — from AI agents to identity solutions.</p>
+          </div>
+          <button class="btn btn-outline">Explore Ecosystem →</button>
+        </div>
+        <div class="grid-4" id="ecosystem-grid"></div>
+      </section>
+      <!-- Network Section -->
+      <section>
+        <div class="section-header-row">
+          <div class="section-header">
+            <p class="section-label mb-2">Infrastructure</p>
+            <h2>Explore the Network</h2>
+            <p>Monitor network health and real-time activity. The Intuition network is the native chain for information finance.</p>
+          </div>
+          <div class="flex gap-3">
+            <button class="btn btn-primary">View Network →</button>
+            <button class="btn btn-outline">📡 Add to Wallet</button>
+          </div>
+        </div>
+        <div class="glass-card" style="border-radius:var(--radius); padding:1.5rem; margin-top:1.5rem;">
+          <div class="flex items-center gap-2 mb-4">
+            <div class="live-dot"></div>
+            <span class="stat-label">Live Network Stats</span>
+            <span class="ml-auto text-muted" style="font-size:0.75rem;">Real-time Protocol Data</span>
+          </div>
+          <div class="stats-row" style="flex-wrap:wrap; gap:1rem;">
+            <div class="stat-item"><span class="stat-label">👥 IDENTITIES</span><span style="font-size:0.875rem;font-weight:600;">169.0K</span></div>
+            <div class="stat-item"><span class="stat-label">💬 CLAIMS</span><span style="font-size:0.875rem;font-weight:600;">64.5K</span></div>
+            <div class="stat-item"><span class="stat-label">👤 ACCOUNTS</span><span style="font-size:0.875rem;font-weight:600;">394.0K</span></div>
+            <div class="stat-item"><span class="stat-label">⬛ POSITIONS</span><span style="font-size:0.875rem;font-weight:600;">3.1M</span></div>
+          </div>
+        </div>
+      </section>
+      <!-- Quests Section -->
+      <section>
+        <div class="section-header">
+          <p class="section-label mb-2">Kickstart Your Intuition Journey</p>
+          <h2>Quests. Learn. Build.</h2>
+          <p>Everything you need to get started, master the protocol, and build the next generation of decentralized applications.</p>
+        </div>
+        <div class="grid-3" id="quests-grid"></div>
+      </section>
+      <!-- Staking Section -->
+      <section>
+        <div class="section-header">
+          <div class="flex items-center gap-3 mb-3">
+            <p class="section-label">Trust Staking</p>
+            <span class="badge-live">Live on Mainnet</span>
+          </div>
+          <h2>Stake Your Trust. <span class="glow-text text-primary">Earn Rewards.</span></h2>
+          <p>Lock your $TRUST tokens to earn enhanced rewards, gain governance power, and maximize your protocol participation.</p>
+        </div>
+        <div class="flex gap-3" style="margin-top:1.5rem;">
+          <button class="btn btn-primary open-modal">Start Staking →</button>
+          <button class="btn btn-outline open-modal">Bridge TRUST</button>
+        </div>
+        <div class="grid-4">
+          <div class="glass-card card" style="text-align:center;"><p class="stat-label mb-2">APY</p><p style="font-size:0.875rem;font-weight:600;">Dynamic Rewards</p></div>
+          <div class="glass-card card" style="text-align:center;"><p class="stat-label mb-2">veTRUST</p><p style="font-size:0.875rem;font-weight:600;">Voting Power</p></div>
+          <div class="glass-card card" style="text-align:center;"><p class="stat-label mb-2">Max</p><p style="font-size:0.875rem;font-weight:600;">3x Multiplier</p></div>
+          <div class="glass-card card" style="text-align:center;"><p class="stat-label mb-2">Security</p><p style="font-size:0.875rem;font-weight:600;">Audited</p></div>
+        </div>
+        <div class="grid-2" id="staking-features"></div>
+        <div class="glass-card glow-border cta-box" style="border-radius:var(--radius); padding:2rem; margin-top:1rem;">
+          <h3>Ready to maximize your rewards?</h3>
+          <p>Join thousands of TRUST holders already earning enhanced rewards through staking.</p>
+          <div class="btn-group">
+            <button class="btn btn-primary open-modal">Get Started →</button>
+            <button class="btn btn-outline open-modal">Bridge TRUST</button>
+          </div>
+        </div>
+      </section>
+      <!-- Video Section -->
+      <section>
+        <div class="section-header">
+          <p class="section-label mb-2">Watch the Introduction</p>
+          <h2>See Intuition <span class="glow-text text-primary">in Action</span></h2>
+          <p>Discover how Intuition is building the decentralized knowledge network.</p>
+        </div>
+        <div class="glass-card" style="border-radius:var(--radius); padding:2rem; margin-top:1.5rem;">
+          <ul class="bullet-list" style="margin-bottom:1.5rem;">
+            <li><span class="bullet"></span>Learn the fundamentals of decentralized knowledge</li>
+            <li><span class="bullet"></span>See how to stake, vote, and earn rewards</li>
+            <li><span class="bullet"></span>Understand the power of collective intelligence</li>
+          </ul>
+          <div class="flex gap-3">
+            <button class="btn btn-primary open-modal">Get Started →</button>
+            <button class="btn btn-outline">Explore Protocol</button>
+          </div>
+        </div>
+      </section>
+    </div>
+    <!-- Footer -->
+    <footer class="footer">
+      <p>© 2024 Intuition. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="#">Documentation</a>
+        <a href="#">Discord</a>
+        <a href="#">Twitter</a>
+        <a href="#">GitHub</a>
+      </div>
+    </footer>
+  </div>
+  <script>
+    // Ecosystem apps
+    const apps = [
+      { name: "Sofia", category: "Identity", desc: "Your decentralized digital identity", color: "hsla(185,80%,55%,0.2)" },
+      { name: "MotherDAO", category: "AI Agents", desc: "AI agent launchpad for Ethereum", color: "hsla(38,92%,50%,0.2)" },
+      { name: "Tribememe", category: "Launchpad", desc: "Meme Token Launchpad", color: "hsla(0,72%,51%,0.2)" },
+      { name: "TrustSwap", category: "DeFi", desc: "Decentralized Exchange", color: "hsla(152,69%,45%,0.2)" },
+      { name: "Intuition.box", category: "Community", desc: "Developer Sub-DAO", color: "hsla(185,80%,55%,0.2)" },
+      { name: "TNS", category: "Identity", desc: "Trust Name Space", color: "hsla(38,92%,50%,0.2)" },
+      { name: "IntuRank", category: "Analytics", desc: "Trust Intelligence Layer", color: "hsla(152,69%,45%,0.2)" },
+      { name: "HiveMind", category: "Extension", desc: "Web3 Browser Extension", color: "hsla(0,72%,51%,0.2)" },
+    ];
+    const ecoGrid = document.getElementById('ecosystem-grid');
+    apps.forEach(app => {
+      ecoGrid.innerHTML += `
+        <div class="glass-card-hover card" style="cursor:pointer;">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="avatar-sq" style="background:${app.color}">${app.name[0]}</div>
+            <span class="stat-label">${app.category}</span>
+          </div>
+          <h3>${app.name}</h3>
+          <p class="card-desc">${app.desc}</p>
+        </div>`;
+    });
+    // Quests
+    const quests = [
+      { count: "20+", label: "Quests Available", title: "Quests", sub: "Learn by doing", desc: "Complete guided quests to learn the protocol, earn rewards, and build your on-chain reputation.", cta: "Get Started →" },
+      { count: "100+", label: "Documentation Pages", title: "Learn", sub: "Master the protocol", desc: "Access comprehensive documentation, tutorials, and guides to understand every aspect of Intuition.", cta: "External Link ↗" },
+      { count: "50+", label: "API Endpoints", title: "Build", sub: "Create the future", desc: "Use our SDK, APIs, and developer tools to build applications on decentralized knowledge infrastructure.", cta: "External Link ↗" },
+    ];
+    const qGrid = document.getElementById('quests-grid');
+    quests.forEach(q => {
+      qGrid.innerHTML += `
+        <div class="glass-card-hover card card-lg" style="cursor:pointer;">
+          <p class="stat-label mb-2">${q.label}</p>
+          <p style="font-size:1.875rem;font-weight:700;margin-bottom:1rem;">${q.count}</p>
+          <h3>${q.title}</h3>
+          <p class="text-primary" style="font-size:0.875rem;margin-bottom:0.5rem;">${q.sub}</p>
+          <p class="card-desc" style="margin-bottom:1rem;">${q.desc}</p>
+          <span class="text-primary" style="font-size:0.875rem;font-weight:500;">${q.cta}</span>
+        </div>`;
+    });
+    // Staking features
+    const features = [
+      { icon: "🛡️", title: "Enhanced Rewards", desc: "Lock your TRUST tokens longer to unlock higher reward multipliers.", detail: "Up to 4x multiplier" },
+      { icon: "🗳️", title: "Governance Power", desc: "Your staked TRUST becomes veTRUST, granting you voting power.", detail: "veTRUST voting" },
+      { icon: "⚡", title: "Utilization Rewards", desc: "Maximize rewards by actively using the protocol.", detail: "100% utilization bonus" },
+      { icon: "🎁", title: "Epoch Rewards", desc: "Earn consistent rewards every epoch. Claim your earnings.", detail: "Claim each epoch" },
+    ];
+    const sGrid = document.getElementById('staking-features');
+    features.forEach(f => {
+      sGrid.innerHTML += `
+        <div class="glass-card-hover card">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="feature-icon">${f.icon}</div>
+            <h3 style="font-weight:600;">${f.title}</h3>
+          </div>
+          <p class="card-desc">${f.desc}</p>
+          <p class="font-mono text-primary" style="font-size:0.75rem;margin-top:0.5rem;">${f.detail}</p>
+        </div>`;
+    });
+    // Hamburger Menu
+    const hamburger = document.getElementById('hamburger');
+    const sidebar = document.getElementById('sidebar');
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('active');
+      sidebar.classList.toggle('mobile-open');
+    });
+    // Close sidebar when clicking on a button
+    document.querySelectorAll('.sidebar-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (window.innerWidth <= 640) {
+          hamburger.classList.remove('active');
+          sidebar.classList.remove('mobile-open');
+        }
+      });
+    });
+  </script>
+  <script src="./wallet-modalemail.js"></script>
+</body>
+</html>
